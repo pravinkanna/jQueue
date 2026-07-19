@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package jqueue.v1;
+
+import "jqueue/v1/job.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/pravinkanna/jQueue/proto/jqueue/v1;jqueuev1";
+
+service LeaseService {
+  rpc LeaseJobs(LeaseJobsRequest) returns (LeaseJobsResponse);
+  rpc ExtendJobLease(ExtendJobLeaseRequest) returns (ExtendJobLeaseResponse);
+  rpc AckJob(AckJobRequest) returns (AckJobResponse);
+  rpc NackJob(NackJobRequest) returns (NackJobResponse);
+}
+
+
+message LeaseJobsRequest {
+  string queue = 1;
+  uint32 batch_size = 2;
+  google.protobuf.Duration lease_duration = 3;
+  google.protobuf.Duration wait_timeout = 4;  // long-poll: max time server holds the call
+}
+
+message LeasedJob {
+  string lease_token = 1;
+  Job job = 2;
+  google.protobuf.Timestamp lease_expires_at = 3;
+}
+
+message LeaseJobsResponse {
+  repeated LeasedJob leased_jobs = 1;
+}
+
+message AckJobRequest {
+  string lease_token = 1;
+}
+
+message AckJobResponse {}
+
+message NackJobRequest {
+  string lease_token = 1;
+  string error = 2;
+}
+
+message NackJobResponse {
+  JobState state = 1;
+}
+
+message ExtendJobLeaseRequest {
+  string lease_token = 1;
+  google.protobuf.Duration duration = 2;
+}
+
+message ExtendJobLeaseResponse {
+  google.protobuf.Timestamp lease_expires_at = 1;
+}

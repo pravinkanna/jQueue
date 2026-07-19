@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package jqueue.v1;
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+import "jqueue/v1/job.proto";
+
+option go_package = "github.com/pravinkanna/jQueue/proto/jqueue/v1;jqueuev1";
+
+service JobService {
+  rpc EnqueueJob(EnqueueJobRequest) returns (EnqueueJobResponse);
+  rpc GetJobState(GetJobStateRequest) returns (GetJobStateResponse);
+  rpc CancelJob(CancelJobRequest) returns (CancelJobResponse);
+  rpc ListJobs(ListJobsRequest) returns (ListJobsResponse);
+  rpc DLQRetryJobs(DLQRetryJobsRequest) returns (DLQRetryJobsResponse);
+}
+
+
+
+message EnqueueJobRequest {
+  string idempotency_key = 1;
+  string queue = 2;
+  bytes payload = 3;
+  uint32 max_retries = 4;
+  oneof schedule {
+    google.protobuf.Timestamp run_at = 5;
+    google.protobuf.Duration delay = 6;
+  }
+}
+
+message EnqueueJobResponse {
+  string job_id = 1;
+  bool is_duplicate = 2;
+}
+
+message GetJobStateRequest {
+  string job_id = 1;
+}
+
+message GetJobStateResponse {
+  JobState state = 1;
+  uint32 retry_attempts = 2;
+  string last_error = 3;
+  google.protobuf.Timestamp scheduled_at = 4;
+}
+
+message CancelJobRequest {
+  string job_id = 1;
+}
+
+message CancelJobResponse {
+  JobState state = 1;
+}
+
+message ListJobsRequest {
+  string queue = 1;
+  JobState state_filter = 2;
+  uint32 page_size = 3;
+  string page_token = 4;
+}
+
+message ListJobsResponse {
+  repeated Job jobs = 1;
+  string next_page_token = 2;
+}
+
+message DLQRetryJobsRequest {
+  oneof target {
+    string job_id = 1;
+    string queue = 2;
+  }
+}
+
+message DLQRetryJobsResponse {
+  uint32 retried_count = 1;
+}

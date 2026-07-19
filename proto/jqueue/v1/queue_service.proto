@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package jqueue.v1;
+option go_package = "github.com/pravinkanna/jQueue/proto/jqueue/v1;jqueuev1";
+
+import "jqueue/v1/queue.proto";
+
+service QueueService {
+  rpc CreateQueue(CreateQueueRequest) returns (CreateQueueResponse);
+  rpc DeleteQueue(DeleteQueueRequest) returns (DeleteQueueResponse); // Done delete non-empty queues
+  rpc PurgeQueue(PurgeQueueRequest) returns (PurgeQueueResponse);
+  rpc GetQueueStatus(GetQueueStatusRequest) returns (GetQueueStatusResponse);
+  rpc ListQueues(ListQueuesRequest) returns (ListQueuesResponse);
+}
+
+
+message CreateQueueRequest {
+  string queue_name = 1;
+}
+
+message CreateQueueResponse {}
+
+message DeleteQueueRequest {
+  string queue_name = 1;
+}
+
+message DeleteQueueResponse {}
+
+message PurgeQueueRequest {
+  string queue_name = 1;
+}
+
+message PurgeQueueResponse {
+  uint64 purged_count = 1;
+}
+
+message GetQueueStatusRequest {
+  string queue_name = 1;
+}
+
+message GetQueueStatusResponse {
+  Queue queue = 1;
+}
+
+message ListQueuesRequest {}
+
+message ListQueuesResponse {
+  repeated Queue queues = 1;
+}

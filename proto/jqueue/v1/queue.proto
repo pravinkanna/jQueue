@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package jqueue.v1;
+option go_package = "github.com/pravinkanna/jQueue/proto/jqueue/v1;jqueuev1";
+
+message Queue {
+  string name = 1;
+  uint64 pending_count = 2;
+  uint64 scheduled_count = 3;
+  uint64 leased_count = 4;
+  uint64 completed_count = 5;
+  uint64 failed_count = 6;
+  uint64 dlq_count = 7;
+}
