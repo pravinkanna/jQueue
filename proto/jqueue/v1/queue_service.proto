@@ -3,7 +3,7 @@ syntax = "proto3";
 package jqueue.v1;
 option go_package = "github.com/pravinkanna/jQueue/proto/jqueue/v1;jqueuev1";
 
-import "jqueue/v1/queue.proto";
+import "queue.proto";
 
 service QueueService {
   rpc CreateQueue(CreateQueueRequest) returns (CreateQueueResponse);
