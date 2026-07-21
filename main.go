@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
@@ -12,6 +13,14 @@ import (
 )
 
 const port = 50051
+
+type HealthServer struct {
+	pb.UnimplementedHealthServiceServer
+}
+
+func (hs *HealthServer) HealthCheck(ctx context.Context, req *pb.HealthCheckRequest) (*pb.HealthCheckResponse, error) {
+	return &pb.HealthCheckResponse{Message: "Alive"}, nil
+}
 
 type jobServer struct {
 	pb.UnimplementedJobServiceServer
@@ -32,13 +41,14 @@ func main() {
 	}
 
 	s := grpc.NewServer()
+	pb.RegisterHealthServiceServer(s, &HealthServer{})
 	pb.RegisterJobServiceServer(s, &jobServer{})
 	pb.RegisterQueueServiceServer(s, &queueServer{})
 	pb.RegisterLeaseServiceServer(s, &leaseServer{})
 
 	reflection.Register(s)
 
-	log.Println("Server starting...")
+	log.Printf("Server starting on port %d", port)
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

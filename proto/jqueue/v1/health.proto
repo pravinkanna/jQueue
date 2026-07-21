@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package jqueue.v1;
+option go_package = "github.com/pravinkanna/jQueue/gen/go/jqueue/v1;jqueuev1";
+
+
+service HealthService {
+  rpc HealthCheck(HealthCheckRequest) returns (HealthCheckResponse);
+}
+
+message HealthCheckRequest {}
+
+message HealthCheckResponse {
+  string message = 1;
+}
