@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"net"
@@ -9,30 +8,10 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
-	pb "github.com/pravinkanna/jQueue/gen/go/jqueue/v1"
+	"github.com/pravinkanna/jQueue/internal/server"
 )
 
 const port = 50051
-
-type HealthServer struct {
-	pb.UnimplementedHealthServiceServer
-}
-
-func (hs *HealthServer) HealthCheck(ctx context.Context, req *pb.HealthCheckRequest) (*pb.HealthCheckResponse, error) {
-	return &pb.HealthCheckResponse{Message: "Alive"}, nil
-}
-
-type jobServer struct {
-	pb.UnimplementedJobServiceServer
-}
-
-type queueServer struct {
-	pb.UnimplementedQueueServiceServer
-}
-
-type leaseServer struct {
-	pb.UnimplementedLeaseServiceServer
-}
 
 func main() {
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
@@ -41,11 +20,7 @@ func main() {
 	}
 
 	s := grpc.NewServer()
-	pb.RegisterHealthServiceServer(s, &HealthServer{})
-	pb.RegisterJobServiceServer(s, &jobServer{})
-	pb.RegisterQueueServiceServer(s, &queueServer{})
-	pb.RegisterLeaseServiceServer(s, &leaseServer{})
-
+	server.Register(s)
 	reflection.Register(s)
 
 	log.Printf("Server starting on port %d", port)
