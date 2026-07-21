@@ -1,5 +1,45 @@
 package main
 
-func main() {
+import (
+	"fmt"
+	"log"
+	"net"
 
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
+
+	pb "github.com/pravinkanna/jQueue/gen/go/jqueue/v1"
+)
+
+const port = 50051
+
+type jobServer struct {
+	pb.UnimplementedJobServiceServer
+}
+
+type queueServer struct {
+	pb.UnimplementedQueueServiceServer
+}
+
+type leaseServer struct {
+	pb.UnimplementedLeaseServiceServer
+}
+
+func main() {
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+	if err != nil {
+		log.Fatalln("TCP server failed to start", err)
+	}
+
+	s := grpc.NewServer()
+	pb.RegisterJobServiceServer(s, &jobServer{})
+	pb.RegisterQueueServiceServer(s, &queueServer{})
+	pb.RegisterLeaseServiceServer(s, &leaseServer{})
+
+	reflection.Register(s)
+
+	log.Println("Server starting...")
+	if err := s.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
 }
