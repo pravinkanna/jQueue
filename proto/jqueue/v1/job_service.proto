@@ -1,11 +1,11 @@
 syntax = "proto3";
 
 package jqueue.v1;
+option go_package = "github.com/pravinkanna/jQueue/gen/go/jqueue/v1;jqueuev1";
+
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/duration.proto";
-import "job.proto";
-
-option go_package = "github.com/pravinkanna/jQueue/proto/jqueue/v1;jqueuev1";
+import "jqueue/v1/job.proto";
 
 service JobService {
   rpc EnqueueJob(EnqueueJobRequest) returns (EnqueueJobResponse);

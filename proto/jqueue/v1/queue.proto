@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package jqueue.v1;
-option go_package = "github.com/pravinkanna/jQueue/proto/jqueue/v1;jqueuev1";
+option go_package = "github.com/pravinkanna/jQueue/gen/go/jqueue/v1;jqueuev1";
 
 message Queue {
   string name = 1;

@@ -2,7 +2,7 @@
 version: v2
 
 modules:
-  - path: proto/jqueue/v1
+  - path: proto
 
 lint:
   use:
