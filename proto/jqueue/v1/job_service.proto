@@ -39,7 +39,7 @@ message GetJobStateRequest {
 
 message GetJobStateResponse {
   JobState state = 1;
-  uint32 retry_attempts = 2;
+  uint32 retry_retries = 2;
   string last_error = 3;
   google.protobuf.Timestamp scheduled_at = 4;
 }

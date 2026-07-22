@@ -93,8 +93,8 @@ type Job struct {
 	Queue          string                 `protobuf:"bytes,3,opt,name=queue,proto3" json:"queue,omitempty"`
 	Payload        []byte                 `protobuf:"bytes,4,opt,name=payload,proto3" json:"payload,omitempty"`
 	State          JobState               `protobuf:"varint,5,opt,name=state,proto3,enum=jqueue.v1.JobState" json:"state,omitempty"`
-	MaxAttempts    uint32                 `protobuf:"varint,6,opt,name=max_attempts,json=maxAttempts,proto3" json:"max_attempts,omitempty"`
-	AttemptCount   uint32                 `protobuf:"varint,7,opt,name=attempt_count,json=attemptCount,proto3" json:"attempt_count,omitempty"`
+	MaxRetries     uint32                 `protobuf:"varint,6,opt,name=max_retries,json=maxRetries,proto3" json:"max_retries,omitempty"`
+	RetryCount     uint32                 `protobuf:"varint,7,opt,name=retry_count,json=retryCount,proto3" json:"retry_count,omitempty"`
 	LastError      string                 `protobuf:"bytes,8,opt,name=last_error,json=lastError,proto3" json:"last_error,omitempty"`
 	CreatedAt      *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	ScheduledAt    *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=scheduled_at,json=scheduledAt,proto3" json:"scheduled_at,omitempty"`
@@ -168,16 +168,16 @@ func (x *Job) GetState() JobState {
 	return JobState_JOB_STATE_UNSPECIFIED
 }
 
-func (x *Job) GetMaxAttempts() uint32 {
+func (x *Job) GetMaxRetries() uint32 {
 	if x != nil {
-		return x.MaxAttempts
+		return x.MaxRetries
 	}
 	return 0
 }
 
-func (x *Job) GetAttemptCount() uint32 {
+func (x *Job) GetRetryCount() uint32 {
 	if x != nil {
-		return x.AttemptCount
+		return x.RetryCount
 	}
 	return 0
 }
@@ -214,15 +214,17 @@ var File_jqueue_v1_job_proto protoreflect.FileDescriptor
 
 const file_jqueue_v1_job_proto_rawDesc = "" +
 	"\n" +
-	"\x13jqueue/v1/job.proto\x12\tjqueue.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xc0\x03\n" +
+	"\x13jqueue/v1/job.proto\x12\tjqueue.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xba\x03\n" +
 	"\x03Job\x12\x15\n" +
 	"\x06job_id\x18\x01 \x01(\tR\x05jobId\x12'\n" +
 	"\x0fidempotency_key\x18\x02 \x01(\tR\x0eidempotencyKey\x12\x14\n" +
 	"\x05queue\x18\x03 \x01(\tR\x05queue\x12\x18\n" +
 	"\apayload\x18\x04 \x01(\fR\apayload\x12)\n" +
-	"\x05state\x18\x05 \x01(\x0e2\x13.jqueue.v1.JobStateR\x05state\x12!\n" +
-	"\fmax_attempts\x18\x06 \x01(\rR\vmaxAttempts\x12#\n" +
-	"\rattempt_count\x18\a \x01(\rR\fattemptCount\x12\x1d\n" +
+	"\x05state\x18\x05 \x01(\x0e2\x13.jqueue.v1.JobStateR\x05state\x12\x1f\n" +
+	"\vmax_retries\x18\x06 \x01(\rR\n" +
+	"maxRetries\x12\x1f\n" +
+	"\vretry_count\x18\a \x01(\rR\n" +
+	"retryCount\x12\x1d\n" +
 	"\n" +
 	"last_error\x18\b \x01(\tR\tlastError\x129\n" +
 	"\n" +

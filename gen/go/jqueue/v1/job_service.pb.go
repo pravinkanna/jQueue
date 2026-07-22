@@ -236,7 +236,7 @@ func (x *GetJobStateRequest) GetJobId() string {
 type GetJobStateResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	State         JobState               `protobuf:"varint,1,opt,name=state,proto3,enum=jqueue.v1.JobState" json:"state,omitempty"`
-	RetryAttempts uint32                 `protobuf:"varint,2,opt,name=retry_attempts,json=retryAttempts,proto3" json:"retry_attempts,omitempty"`
+	RetryRetries  uint32                 `protobuf:"varint,2,opt,name=retry_retries,json=retryRetries,proto3" json:"retry_retries,omitempty"`
 	LastError     string                 `protobuf:"bytes,3,opt,name=last_error,json=lastError,proto3" json:"last_error,omitempty"`
 	ScheduledAt   *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=scheduled_at,json=scheduledAt,proto3" json:"scheduled_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -280,9 +280,9 @@ func (x *GetJobStateResponse) GetState() JobState {
 	return JobState_JOB_STATE_UNSPECIFIED
 }
 
-func (x *GetJobStateResponse) GetRetryAttempts() uint32 {
+func (x *GetJobStateResponse) GetRetryRetries() uint32 {
 	if x != nil {
-		return x.RetryAttempts
+		return x.RetryRetries
 	}
 	return 0
 }
@@ -654,10 +654,10 @@ const file_jqueue_v1_job_service_proto_rawDesc = "" +
 	"\x06job_id\x18\x01 \x01(\tR\x05jobId\x12!\n" +
 	"\fis_duplicate\x18\x02 \x01(\bR\visDuplicate\"+\n" +
 	"\x12GetJobStateRequest\x12\x15\n" +
-	"\x06job_id\x18\x01 \x01(\tR\x05jobId\"\xc5\x01\n" +
+	"\x06job_id\x18\x01 \x01(\tR\x05jobId\"\xc3\x01\n" +
 	"\x13GetJobStateResponse\x12)\n" +
-	"\x05state\x18\x01 \x01(\x0e2\x13.jqueue.v1.JobStateR\x05state\x12%\n" +
-	"\x0eretry_attempts\x18\x02 \x01(\rR\rretryAttempts\x12\x1d\n" +
+	"\x05state\x18\x01 \x01(\x0e2\x13.jqueue.v1.JobStateR\x05state\x12#\n" +
+	"\rretry_retries\x18\x02 \x01(\rR\fretryRetries\x12\x1d\n" +
 	"\n" +
 	"last_error\x18\x03 \x01(\tR\tlastError\x12=\n" +
 	"\fscheduled_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\vscheduledAt\")\n" +

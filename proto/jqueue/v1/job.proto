@@ -23,8 +23,8 @@ message Job {
   string queue = 3;
   bytes payload = 4;
   JobState state = 5;
-  uint32 max_attempts = 6;
-  uint32 attempt_count = 7;
+  uint32 max_retries = 6;
+  uint32 retry_count = 7;
   string last_error = 8;
   google.protobuf.Timestamp created_at = 9;
   google.protobuf.Timestamp scheduled_at = 10;

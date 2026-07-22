@@ -278,7 +278,7 @@ func (*AckJobResponse) Descriptor() ([]byte, []int) {
 type NackJobRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	LeaseToken    string                 `protobuf:"bytes,1,opt,name=lease_token,json=leaseToken,proto3" json:"lease_token,omitempty"`
-	Error         string                 `protobuf:"bytes,2,opt,name=error,proto3" json:"error,omitempty"`
+	Reason        string                 `protobuf:"bytes,2,opt,name=reason,proto3" json:"reason,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -320,9 +320,9 @@ func (x *NackJobRequest) GetLeaseToken() string {
 	return ""
 }
 
-func (x *NackJobRequest) GetError() string {
+func (x *NackJobRequest) GetReason() string {
 	if x != nil {
-		return x.Error
+		return x.Reason
 	}
 	return ""
 }
@@ -489,11 +489,11 @@ const file_jqueue_v1_lease_service_proto_rawDesc = "" +
 	"\rAckJobRequest\x12\x1f\n" +
 	"\vlease_token\x18\x01 \x01(\tR\n" +
 	"leaseToken\"\x10\n" +
-	"\x0eAckJobResponse\"G\n" +
+	"\x0eAckJobResponse\"I\n" +
 	"\x0eNackJobRequest\x12\x1f\n" +
 	"\vlease_token\x18\x01 \x01(\tR\n" +
-	"leaseToken\x12\x14\n" +
-	"\x05error\x18\x02 \x01(\tR\x05error\"<\n" +
+	"leaseToken\x12\x16\n" +
+	"\x06reason\x18\x02 \x01(\tR\x06reason\"<\n" +
 	"\x0fNackJobResponse\x12)\n" +
 	"\x05state\x18\x01 \x01(\x0e2\x13.jqueue.v1.JobStateR\x05state\"o\n" +
 	"\x15ExtendJobLeaseRequest\x12\x1f\n" +

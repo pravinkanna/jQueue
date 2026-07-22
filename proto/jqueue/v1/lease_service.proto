@@ -41,7 +41,7 @@ message AckJobResponse {}
 
 message NackJobRequest {
   string lease_token = 1;
-  string error = 2;
+  string reason = 2;
 }
 
 message NackJobResponse {
