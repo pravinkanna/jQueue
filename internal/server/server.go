@@ -6,15 +6,12 @@ import (
 	pb "github.com/pravinkanna/jQueue/gen/go/jqueue/v1"
 
 	"github.com/pravinkanna/jQueue/internal/store"
-	"github.com/pravinkanna/jQueue/internal/store/memory"
 )
 
-var st store.Store = &memory.Memory{}
-
 // Register attaches the gRPC services to gRPC server
-func Register(s *grpc.Server) {
+func Register(s *grpc.Server, st store.Store) {
 	pb.RegisterHealthServiceServer(s, &healthServer{})
-	pb.RegisterJobServiceServer(s, &jobServer{})
-	pb.RegisterQueueServiceServer(s, &queueServer{})
-	pb.RegisterLeaseServiceServer(s, &leaseServer{})
+	pb.RegisterJobServiceServer(s, &jobServer{st: st})
+	pb.RegisterQueueServiceServer(s, &queueServer{st: st})
+	pb.RegisterLeaseServiceServer(s, &leaseServer{st: st})
 }

@@ -14,6 +14,8 @@ import (
 	"google.golang.org/grpc/reflection"
 
 	"github.com/pravinkanna/jQueue/internal/server"
+	"github.com/pravinkanna/jQueue/internal/store"
+	"github.com/pravinkanna/jQueue/internal/store/memory"
 )
 
 const (
@@ -37,8 +39,10 @@ func run() error {
 		return fmt.Errorf("TCP server failed to start: %w", err)
 	}
 
+	var st store.Store = &memory.Memory{}
+
 	s := grpc.NewServer()
-	server.Register(s)
+	server.Register(s, st)
 	reflection.Register(s)
 
 	serveErr := make(chan error, 1)

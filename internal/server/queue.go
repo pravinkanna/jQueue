@@ -4,16 +4,18 @@ import (
 	"context"
 
 	pb "github.com/pravinkanna/jQueue/gen/go/jqueue/v1"
+	"github.com/pravinkanna/jQueue/internal/store"
 )
 
 type queueServer struct {
 	pb.UnimplementedQueueServiceServer
+	st store.Store
 }
 
 func (qs *queueServer) CreateQueue(ctx context.Context, req *pb.CreateQueueRequest) (*pb.CreateQueueResponse, error) {
 	queueName := req.QueueName
 
-	err := st.CreateQueue(ctx, queueName)
+	err := qs.st.CreateQueue(ctx, queueName)
 	if err != nil {
 		return nil, err
 	}
@@ -23,7 +25,7 @@ func (qs *queueServer) CreateQueue(ctx context.Context, req *pb.CreateQueueReque
 
 func (qs *queueServer) DeleteQueue(ctx context.Context, req *pb.DeleteQueueRequest) (*pb.DeleteQueueResponse, error) {
 	queueName := req.QueueName
-	err := st.DeleteQueue(ctx, queueName)
+	err := qs.st.DeleteQueue(ctx, queueName)
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +35,7 @@ func (qs *queueServer) DeleteQueue(ctx context.Context, req *pb.DeleteQueueReque
 
 func (qs *queueServer) PurgeQueue(ctx context.Context, req *pb.PurgeQueueRequest) (*pb.PurgeQueueResponse, error) {
 	queueName := req.QueueName
-	purgedCount, err := st.PurgeQueue(ctx, queueName)
+	purgedCount, err := qs.st.PurgeQueue(ctx, queueName)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +47,7 @@ func (qs *queueServer) PurgeQueue(ctx context.Context, req *pb.PurgeQueueRequest
 
 func (qs *queueServer) GetQueueStatus(ctx context.Context, req *pb.GetQueueStatusRequest) (*pb.GetQueueStatusResponse, error) {
 	queueName := req.QueueName
-	queue, err := st.GetQueueStatus(ctx, queueName)
+	queue, err := qs.st.GetQueueStatus(ctx, queueName)
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +66,7 @@ func (qs *queueServer) GetQueueStatus(ctx context.Context, req *pb.GetQueueStatu
 }
 
 func (qs *queueServer) ListQueues(ctx context.Context, req *pb.ListQueuesRequest) (*pb.ListQueuesResponse, error) {
-	queues, err := st.ListQueues(ctx)
+	queues, err := qs.st.ListQueues(ctx)
 	if err != nil {
 		return nil, err
 	}

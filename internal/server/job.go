@@ -12,6 +12,7 @@ import (
 
 type jobServer struct {
 	pb.UnimplementedJobServiceServer
+	st store.Store
 }
 
 func (js *jobServer) EnqueueJob(ctx context.Context, req *pb.EnqueueJobRequest) (*pb.EnqueueJobResponse, error) {
@@ -31,7 +32,7 @@ func (js *jobServer) EnqueueJob(ctx context.Context, req *pb.EnqueueJobRequest) 
 		MaxRetries:     req.MaxRetries,
 		RunAt:          runAtTs,
 	}
-	jobID, isDup, err := st.EnqueueJob(ctx, params)
+	jobID, isDup, err := js.st.EnqueueJob(ctx, params)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +45,7 @@ func (js *jobServer) EnqueueJob(ctx context.Context, req *pb.EnqueueJobRequest) 
 
 func (js *jobServer) GetJobState(ctx context.Context, req *pb.GetJobStateRequest) (*pb.GetJobStateResponse, error) {
 	jobID := req.JobId
-	job, err := st.GetJob(ctx, jobID)
+	job, err := js.st.GetJob(ctx, jobID)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +61,7 @@ func (js *jobServer) GetJobState(ctx context.Context, req *pb.GetJobStateRequest
 
 func (js *jobServer) CancelJob(ctx context.Context, req *pb.CancelJobRequest) (*pb.CancelJobResponse, error) {
 	jobID := req.JobId
-	state, err := st.CancelJob(ctx, jobID)
+	state, err := js.st.CancelJob(ctx, jobID)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +76,7 @@ func (js *jobServer) ListJobs(ctx context.Context, req *pb.ListJobsRequest) (*pb
 	state := store.JobState(req.StateFilter)
 	pSize := req.PageSize
 	pToken := req.PageToken
-	jobs, nToken, err := st.ListJobs(ctx, queueName, state, pSize, pToken)
+	jobs, nToken, err := js.st.ListJobs(ctx, queueName, state, pSize, pToken)
 	if err != nil {
 		return nil, err
 	}
@@ -112,9 +113,9 @@ func (js *jobServer) DLQRetryJobs(ctx context.Context, req *pb.DLQRetryJobsReque
 	var retryCount uint32
 	var err error
 	if jobID != "" {
-		err = st.RetryDLQJob(ctx, jobID)
+		err = js.st.RetryDLQJob(ctx, jobID)
 	} else if queueName != "" {
-		retryCount, err = st.RetryDLQQueue(ctx, queueName)
+		retryCount, err = js.st.RetryDLQQueue(ctx, queueName)
 	} else {
 		return nil, fmt.Errorf("Provide either JobID or QueueName")
 	}

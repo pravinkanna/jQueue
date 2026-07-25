@@ -4,18 +4,20 @@ import (
 	"context"
 
 	pb "github.com/pravinkanna/jQueue/gen/go/jqueue/v1"
+	"github.com/pravinkanna/jQueue/internal/store"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type leaseServer struct {
 	pb.UnimplementedLeaseServiceServer
+	st store.Store
 }
 
 func (ls *leaseServer) LeaseJobs(ctx context.Context, req *pb.LeaseJobsRequest) (*pb.LeaseJobsResponse, error) {
 	queueName := req.Queue
 	batchSize := req.BatchSize
 	leaseDuration := req.LeaseDuration.AsDuration()
-	leasedJobs, err := st.LeaseJobs(ctx, queueName, batchSize, leaseDuration)
+	leasedJobs, err := ls.st.LeaseJobs(ctx, queueName, batchSize, leaseDuration)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +52,7 @@ func (ls *leaseServer) LeaseJobs(ctx context.Context, req *pb.LeaseJobsRequest) 
 func (ls *leaseServer) ExtendJobLease(ctx context.Context, req *pb.ExtendJobLeaseRequest) (*pb.ExtendJobLeaseResponse, error) {
 	leaseToken := req.LeaseToken
 	duration := req.Duration.AsDuration()
-	expiresAt, err := st.ExtendJobLease(ctx, leaseToken, duration)
+	expiresAt, err := ls.st.ExtendJobLease(ctx, leaseToken, duration)
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +64,7 @@ func (ls *leaseServer) ExtendJobLease(ctx context.Context, req *pb.ExtendJobLeas
 
 func (ls *leaseServer) AckJob(ctx context.Context, req *pb.AckJobRequest) (*pb.AckJobResponse, error) {
 	leaseToken := req.LeaseToken
-	err := st.AckJob(ctx, leaseToken)
+	err := ls.st.AckJob(ctx, leaseToken)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +75,7 @@ func (ls *leaseServer) AckJob(ctx context.Context, req *pb.AckJobRequest) (*pb.A
 func (ls *leaseServer) NackJob(ctx context.Context, req *pb.NackJobRequest) (*pb.NackJobResponse, error) {
 	leaseToken := req.LeaseToken
 	reason := req.Reason
-	err := st.NackJob(ctx, leaseToken, reason)
+	err := ls.st.NackJob(ctx, leaseToken, reason)
 	if err != nil {
 		return nil, err
 	}
