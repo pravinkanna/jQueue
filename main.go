@@ -39,7 +39,7 @@ func run() error {
 		return fmt.Errorf("TCP server failed to start: %w", err)
 	}
 
-	var st store.Store = &memory.Memory{}
+	var st store.Store = memory.New()
 
 	s := grpc.NewServer()
 	server.Register(s, st)
