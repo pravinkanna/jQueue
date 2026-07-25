@@ -329,7 +329,6 @@ func (x *NackJobRequest) GetReason() string {
 
 type NackJobResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	State         JobState               `protobuf:"varint,1,opt,name=state,proto3,enum=jqueue.v1.JobState" json:"state,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -362,13 +361,6 @@ func (x *NackJobResponse) ProtoReflect() protoreflect.Message {
 // Deprecated: Use NackJobResponse.ProtoReflect.Descriptor instead.
 func (*NackJobResponse) Descriptor() ([]byte, []int) {
 	return file_jqueue_v1_lease_service_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *NackJobResponse) GetState() JobState {
-	if x != nil {
-		return x.State
-	}
-	return JobState_JOB_STATE_UNSPECIFIED
 }
 
 type ExtendJobLeaseRequest struct {
@@ -493,9 +485,8 @@ const file_jqueue_v1_lease_service_proto_rawDesc = "" +
 	"\x0eNackJobRequest\x12\x1f\n" +
 	"\vlease_token\x18\x01 \x01(\tR\n" +
 	"leaseToken\x12\x16\n" +
-	"\x06reason\x18\x02 \x01(\tR\x06reason\"<\n" +
-	"\x0fNackJobResponse\x12)\n" +
-	"\x05state\x18\x01 \x01(\x0e2\x13.jqueue.v1.JobStateR\x05state\"o\n" +
+	"\x06reason\x18\x02 \x01(\tR\x06reason\"\x11\n" +
+	"\x0fNackJobResponse\"o\n" +
 	"\x15ExtendJobLeaseRequest\x12\x1f\n" +
 	"\vlease_token\x18\x01 \x01(\tR\n" +
 	"leaseToken\x125\n" +
@@ -536,7 +527,6 @@ var file_jqueue_v1_lease_service_proto_goTypes = []any{
 	(*durationpb.Duration)(nil),    // 9: google.protobuf.Duration
 	(*Job)(nil),                    // 10: jqueue.v1.Job
 	(*timestamppb.Timestamp)(nil),  // 11: google.protobuf.Timestamp
-	(JobState)(0),                  // 12: jqueue.v1.JobState
 }
 var file_jqueue_v1_lease_service_proto_depIdxs = []int32{
 	9,  // 0: jqueue.v1.LeaseJobsRequest.lease_duration:type_name -> google.protobuf.Duration
@@ -544,22 +534,21 @@ var file_jqueue_v1_lease_service_proto_depIdxs = []int32{
 	10, // 2: jqueue.v1.LeasedJob.job:type_name -> jqueue.v1.Job
 	11, // 3: jqueue.v1.LeasedJob.lease_expires_at:type_name -> google.protobuf.Timestamp
 	1,  // 4: jqueue.v1.LeaseJobsResponse.leased_jobs:type_name -> jqueue.v1.LeasedJob
-	12, // 5: jqueue.v1.NackJobResponse.state:type_name -> jqueue.v1.JobState
-	9,  // 6: jqueue.v1.ExtendJobLeaseRequest.duration:type_name -> google.protobuf.Duration
-	11, // 7: jqueue.v1.ExtendJobLeaseResponse.lease_expires_at:type_name -> google.protobuf.Timestamp
-	0,  // 8: jqueue.v1.LeaseService.LeaseJobs:input_type -> jqueue.v1.LeaseJobsRequest
-	7,  // 9: jqueue.v1.LeaseService.ExtendJobLease:input_type -> jqueue.v1.ExtendJobLeaseRequest
-	3,  // 10: jqueue.v1.LeaseService.AckJob:input_type -> jqueue.v1.AckJobRequest
-	5,  // 11: jqueue.v1.LeaseService.NackJob:input_type -> jqueue.v1.NackJobRequest
-	2,  // 12: jqueue.v1.LeaseService.LeaseJobs:output_type -> jqueue.v1.LeaseJobsResponse
-	8,  // 13: jqueue.v1.LeaseService.ExtendJobLease:output_type -> jqueue.v1.ExtendJobLeaseResponse
-	4,  // 14: jqueue.v1.LeaseService.AckJob:output_type -> jqueue.v1.AckJobResponse
-	6,  // 15: jqueue.v1.LeaseService.NackJob:output_type -> jqueue.v1.NackJobResponse
-	12, // [12:16] is the sub-list for method output_type
-	8,  // [8:12] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	9,  // 5: jqueue.v1.ExtendJobLeaseRequest.duration:type_name -> google.protobuf.Duration
+	11, // 6: jqueue.v1.ExtendJobLeaseResponse.lease_expires_at:type_name -> google.protobuf.Timestamp
+	0,  // 7: jqueue.v1.LeaseService.LeaseJobs:input_type -> jqueue.v1.LeaseJobsRequest
+	7,  // 8: jqueue.v1.LeaseService.ExtendJobLease:input_type -> jqueue.v1.ExtendJobLeaseRequest
+	3,  // 9: jqueue.v1.LeaseService.AckJob:input_type -> jqueue.v1.AckJobRequest
+	5,  // 10: jqueue.v1.LeaseService.NackJob:input_type -> jqueue.v1.NackJobRequest
+	2,  // 11: jqueue.v1.LeaseService.LeaseJobs:output_type -> jqueue.v1.LeaseJobsResponse
+	8,  // 12: jqueue.v1.LeaseService.ExtendJobLease:output_type -> jqueue.v1.ExtendJobLeaseResponse
+	4,  // 13: jqueue.v1.LeaseService.AckJob:output_type -> jqueue.v1.AckJobResponse
+	6,  // 14: jqueue.v1.LeaseService.NackJob:output_type -> jqueue.v1.NackJobResponse
+	11, // [11:15] is the sub-list for method output_type
+	7,  // [7:11] is the sub-list for method input_type
+	7,  // [7:7] is the sub-list for extension type_name
+	7,  // [7:7] is the sub-list for extension extendee
+	0,  // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_jqueue_v1_lease_service_proto_init() }

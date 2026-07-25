@@ -44,9 +44,7 @@ message NackJobRequest {
   string reason = 2;
 }
 
-message NackJobResponse {
-  JobState state = 1;
-}
+message NackJobResponse {}
 
 message ExtendJobLeaseRequest {
   string lease_token = 1;
