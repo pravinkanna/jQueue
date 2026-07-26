@@ -7,14 +7,19 @@ import (
 )
 
 type Memory struct {
-	mu     sync.Mutex
-	queues map[string]store.Queue // k - queueName, V - queueInfo
-	jobs   map[string][]store.Job // K - queueName, V - list of jobs
+	mu              sync.Mutex
+	queueWithJobIDs map[string]*queueWithJobIDs // k - queueName, V - queueMeta and jobIds
+	jobs            map[string]*store.Job       // K - JobID, V - Job Data
+}
+
+type queueWithJobIDs struct {
+	queue  store.Queue
+	jobIDs []string
 }
 
 func New() *Memory {
 	return &Memory{
-		queues: make(map[string]store.Queue),
-		jobs:   make(map[string][]store.Job),
+		queueWithJobIDs: make(map[string]*queueWithJobIDs),
+		jobs:            make(map[string]*store.Job),
 	}
 }
