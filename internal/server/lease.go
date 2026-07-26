@@ -13,38 +13,33 @@ type leaseServer struct {
 	st store.Store
 }
 
-func (ls *leaseServer) LeaseJobs(ctx context.Context, req *pb.LeaseJobsRequest) (*pb.LeaseJobsResponse, error) {
+func (ls *leaseServer) LeaseJobs(ctx context.Context, req *pb.LeaseJobRequest) (*pb.LeaseJobResponse, error) {
 	queueName := req.Queue
-	batchSize := req.BatchSize
 	leaseDuration := req.LeaseDuration.AsDuration()
-	leasedJobs, err := ls.st.LeaseJobs(ctx, queueName, batchSize, leaseDuration)
+	leasedJobs, err := ls.st.LeaseJob(ctx, queueName, leaseDuration)
 	if err != nil {
 		return nil, err
 	}
-	pbLeasedJobs := []*pb.LeasedJob{}
-	for _, j := range leasedJobs {
-		pbLeasedJob := &pb.LeasedJob{
-			LeaseToken: j.LeaseToken,
-			Job: &pb.Job{
-				JobId:          j.Job.JobID,
-				IdempotencyKey: j.Job.IdempotencyKey,
-				Queue:          j.Job.Queue,
-				Payload:        j.Job.Payload,
-				State:          pb.JobState(j.Job.State),
-				MaxRetries:     j.Job.MaxRetries,
-				RetryCount:     j.Job.RetryCount,
-				LastError:      j.Job.LastError,
-				CreatedAt:      timestamppb.New(j.Job.CreatedAt),
-				ScheduledAt:    timestamppb.New(j.Job.ScheduledAt),
-				CompletedAt:    timestamppb.New(j.Job.CompletedAt),
-			},
-			LeaseExpiresAt: timestamppb.New(j.ExpiresAt),
-		}
-		pbLeasedJobs = append(pbLeasedJobs, pbLeasedJob)
+	pbLeasedJob := &pb.LeasedJob{
+		LeaseToken: leasedJobs.LeaseToken,
+		Job: &pb.Job{
+			JobId:          leasedJobs.Job.JobID,
+			IdempotencyKey: leasedJobs.Job.IdempotencyKey,
+			Queue:          leasedJobs.Job.Queue,
+			Payload:        leasedJobs.Job.Payload,
+			State:          pb.JobState(leasedJobs.Job.State),
+			MaxRetries:     leasedJobs.Job.MaxRetries,
+			RetryCount:     leasedJobs.Job.RetryCount,
+			LastError:      leasedJobs.Job.LastError,
+			CreatedAt:      timestamppb.New(leasedJobs.Job.CreatedAt),
+			ScheduledAt:    timestamppb.New(leasedJobs.Job.ScheduledAt),
+			CompletedAt:    timestamppb.New(leasedJobs.Job.CompletedAt),
+		},
+		LeaseExpiresAt: timestamppb.New(leasedJobs.ExpiresAt),
 	}
 
-	res := &pb.LeaseJobsResponse{
-		LeasedJobs: pbLeasedJobs,
+	res := &pb.LeaseJobResponse{
+		LeasedJob: pbLeasedJob,
 	}
 	return res, nil
 }

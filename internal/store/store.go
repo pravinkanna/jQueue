@@ -73,7 +73,7 @@ type Store interface {
 	RetryDLQQueue(ctx context.Context, queue string) (retriedCount uint32, err error)
 
 	// Lease
-	LeaseJobs(ctx context.Context, queue string, batchSize uint32, leaseDuration time.Duration) (leasedJobs []LeasedJob, err error)
+	LeaseJob(ctx context.Context, queue string, leaseDuration time.Duration) (leasedJobs LeasedJob, err error)
 	ExtendJobLease(ctx context.Context, leaseToken string, duration time.Duration) (leaseExpiresAt time.Time, err error)
 	AckJob(ctx context.Context, leaseToken string) error
 	NackJob(ctx context.Context, leaseToken string, reason string) error

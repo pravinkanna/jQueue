@@ -8,7 +8,10 @@ import (
 )
 
 // Lease
-func (m *Memory) LeaseJobs(ctx context.Context, queue string, batchSize uint32, leaseDuration time.Duration) (leasedJobs []store.LeasedJob, err error) {
+func (m *Memory) LeaseJob(ctx context.Context, queue string, leaseDuration time.Duration) (leasedJobs store.LeasedJob, err error) {
+	// check the queue exist
+
+	// make sure the queue len
 	return leasedJobs, nil
 }
 

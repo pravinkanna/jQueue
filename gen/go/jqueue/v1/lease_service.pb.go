@@ -23,30 +23,29 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type LeaseJobsRequest struct {
+type LeaseJobRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Queue         string                 `protobuf:"bytes,1,opt,name=queue,proto3" json:"queue,omitempty"`
-	BatchSize     uint32                 `protobuf:"varint,2,opt,name=batch_size,json=batchSize,proto3" json:"batch_size,omitempty"`
-	LeaseDuration *durationpb.Duration   `protobuf:"bytes,3,opt,name=lease_duration,json=leaseDuration,proto3" json:"lease_duration,omitempty"`
-	WaitTimeout   *durationpb.Duration   `protobuf:"bytes,4,opt,name=wait_timeout,json=waitTimeout,proto3" json:"wait_timeout,omitempty"` // long-poll: max time server holds the call
+	LeaseDuration *durationpb.Duration   `protobuf:"bytes,2,opt,name=lease_duration,json=leaseDuration,proto3" json:"lease_duration,omitempty"`
+	WaitTimeout   *durationpb.Duration   `protobuf:"bytes,3,opt,name=wait_timeout,json=waitTimeout,proto3" json:"wait_timeout,omitempty"` // long-poll: max time server holds the call
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *LeaseJobsRequest) Reset() {
-	*x = LeaseJobsRequest{}
+func (x *LeaseJobRequest) Reset() {
+	*x = LeaseJobRequest{}
 	mi := &file_jqueue_v1_lease_service_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *LeaseJobsRequest) String() string {
+func (x *LeaseJobRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*LeaseJobsRequest) ProtoMessage() {}
+func (*LeaseJobRequest) ProtoMessage() {}
 
-func (x *LeaseJobsRequest) ProtoReflect() protoreflect.Message {
+func (x *LeaseJobRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_jqueue_v1_lease_service_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -58,33 +57,26 @@ func (x *LeaseJobsRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use LeaseJobsRequest.ProtoReflect.Descriptor instead.
-func (*LeaseJobsRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use LeaseJobRequest.ProtoReflect.Descriptor instead.
+func (*LeaseJobRequest) Descriptor() ([]byte, []int) {
 	return file_jqueue_v1_lease_service_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *LeaseJobsRequest) GetQueue() string {
+func (x *LeaseJobRequest) GetQueue() string {
 	if x != nil {
 		return x.Queue
 	}
 	return ""
 }
 
-func (x *LeaseJobsRequest) GetBatchSize() uint32 {
-	if x != nil {
-		return x.BatchSize
-	}
-	return 0
-}
-
-func (x *LeaseJobsRequest) GetLeaseDuration() *durationpb.Duration {
+func (x *LeaseJobRequest) GetLeaseDuration() *durationpb.Duration {
 	if x != nil {
 		return x.LeaseDuration
 	}
 	return nil
 }
 
-func (x *LeaseJobsRequest) GetWaitTimeout() *durationpb.Duration {
+func (x *LeaseJobRequest) GetWaitTimeout() *durationpb.Duration {
 	if x != nil {
 		return x.WaitTimeout
 	}
@@ -151,27 +143,27 @@ func (x *LeasedJob) GetLeaseExpiresAt() *timestamppb.Timestamp {
 	return nil
 }
 
-type LeaseJobsResponse struct {
+type LeaseJobResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	LeasedJobs    []*LeasedJob           `protobuf:"bytes,1,rep,name=leased_jobs,json=leasedJobs,proto3" json:"leased_jobs,omitempty"`
+	LeasedJob     *LeasedJob             `protobuf:"bytes,1,opt,name=leased_job,json=leasedJob,proto3" json:"leased_job,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *LeaseJobsResponse) Reset() {
-	*x = LeaseJobsResponse{}
+func (x *LeaseJobResponse) Reset() {
+	*x = LeaseJobResponse{}
 	mi := &file_jqueue_v1_lease_service_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *LeaseJobsResponse) String() string {
+func (x *LeaseJobResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*LeaseJobsResponse) ProtoMessage() {}
+func (*LeaseJobResponse) ProtoMessage() {}
 
-func (x *LeaseJobsResponse) ProtoReflect() protoreflect.Message {
+func (x *LeaseJobResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_jqueue_v1_lease_service_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -183,14 +175,14 @@ func (x *LeaseJobsResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use LeaseJobsResponse.ProtoReflect.Descriptor instead.
-func (*LeaseJobsResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use LeaseJobResponse.ProtoReflect.Descriptor instead.
+func (*LeaseJobResponse) Descriptor() ([]byte, []int) {
 	return file_jqueue_v1_lease_service_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *LeaseJobsResponse) GetLeasedJobs() []*LeasedJob {
+func (x *LeaseJobResponse) GetLeasedJob() *LeasedJob {
 	if x != nil {
-		return x.LeasedJobs
+		return x.LeasedJob
 	}
 	return nil
 }
@@ -463,21 +455,19 @@ var File_jqueue_v1_lease_service_proto protoreflect.FileDescriptor
 
 const file_jqueue_v1_lease_service_proto_rawDesc = "" +
 	"\n" +
-	"\x1djqueue/v1/lease_service.proto\x12\tjqueue.v1\x1a\x1egoogle/protobuf/duration.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13jqueue/v1/job.proto\"\xc7\x01\n" +
-	"\x10LeaseJobsRequest\x12\x14\n" +
-	"\x05queue\x18\x01 \x01(\tR\x05queue\x12\x1d\n" +
-	"\n" +
-	"batch_size\x18\x02 \x01(\rR\tbatchSize\x12@\n" +
-	"\x0elease_duration\x18\x03 \x01(\v2\x19.google.protobuf.DurationR\rleaseDuration\x12<\n" +
-	"\fwait_timeout\x18\x04 \x01(\v2\x19.google.protobuf.DurationR\vwaitTimeout\"\x94\x01\n" +
+	"\x1djqueue/v1/lease_service.proto\x12\tjqueue.v1\x1a\x1egoogle/protobuf/duration.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13jqueue/v1/job.proto\"\xa7\x01\n" +
+	"\x0fLeaseJobRequest\x12\x14\n" +
+	"\x05queue\x18\x01 \x01(\tR\x05queue\x12@\n" +
+	"\x0elease_duration\x18\x02 \x01(\v2\x19.google.protobuf.DurationR\rleaseDuration\x12<\n" +
+	"\fwait_timeout\x18\x03 \x01(\v2\x19.google.protobuf.DurationR\vwaitTimeout\"\x94\x01\n" +
 	"\tLeasedJob\x12\x1f\n" +
 	"\vlease_token\x18\x01 \x01(\tR\n" +
 	"leaseToken\x12 \n" +
 	"\x03job\x18\x02 \x01(\v2\x0e.jqueue.v1.JobR\x03job\x12D\n" +
-	"\x10lease_expires_at\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\x0eleaseExpiresAt\"J\n" +
-	"\x11LeaseJobsResponse\x125\n" +
-	"\vleased_jobs\x18\x01 \x03(\v2\x14.jqueue.v1.LeasedJobR\n" +
-	"leasedJobs\"0\n" +
+	"\x10lease_expires_at\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\x0eleaseExpiresAt\"G\n" +
+	"\x10LeaseJobResponse\x123\n" +
+	"\n" +
+	"leased_job\x18\x01 \x01(\v2\x14.jqueue.v1.LeasedJobR\tleasedJob\"0\n" +
 	"\rAckJobRequest\x12\x1f\n" +
 	"\vlease_token\x18\x01 \x01(\tR\n" +
 	"leaseToken\"\x10\n" +
@@ -492,9 +482,9 @@ const file_jqueue_v1_lease_service_proto_rawDesc = "" +
 	"leaseToken\x125\n" +
 	"\bduration\x18\x02 \x01(\v2\x19.google.protobuf.DurationR\bduration\"^\n" +
 	"\x16ExtendJobLeaseResponse\x12D\n" +
-	"\x10lease_expires_at\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x0eleaseExpiresAt2\xae\x02\n" +
-	"\fLeaseService\x12F\n" +
-	"\tLeaseJobs\x12\x1b.jqueue.v1.LeaseJobsRequest\x1a\x1c.jqueue.v1.LeaseJobsResponse\x12U\n" +
+	"\x10lease_expires_at\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x0eleaseExpiresAt2\xab\x02\n" +
+	"\fLeaseService\x12C\n" +
+	"\bLeaseJob\x12\x1a.jqueue.v1.LeaseJobRequest\x1a\x1b.jqueue.v1.LeaseJobResponse\x12U\n" +
 	"\x0eExtendJobLease\x12 .jqueue.v1.ExtendJobLeaseRequest\x1a!.jqueue.v1.ExtendJobLeaseResponse\x12=\n" +
 	"\x06AckJob\x12\x18.jqueue.v1.AckJobRequest\x1a\x19.jqueue.v1.AckJobResponse\x12@\n" +
 	"\aNackJob\x12\x19.jqueue.v1.NackJobRequest\x1a\x1a.jqueue.v1.NackJobResponseB\xa0\x01\n" +
@@ -515,9 +505,9 @@ func file_jqueue_v1_lease_service_proto_rawDescGZIP() []byte {
 
 var file_jqueue_v1_lease_service_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_jqueue_v1_lease_service_proto_goTypes = []any{
-	(*LeaseJobsRequest)(nil),       // 0: jqueue.v1.LeaseJobsRequest
+	(*LeaseJobRequest)(nil),        // 0: jqueue.v1.LeaseJobRequest
 	(*LeasedJob)(nil),              // 1: jqueue.v1.LeasedJob
-	(*LeaseJobsResponse)(nil),      // 2: jqueue.v1.LeaseJobsResponse
+	(*LeaseJobResponse)(nil),       // 2: jqueue.v1.LeaseJobResponse
 	(*AckJobRequest)(nil),          // 3: jqueue.v1.AckJobRequest
 	(*AckJobResponse)(nil),         // 4: jqueue.v1.AckJobResponse
 	(*NackJobRequest)(nil),         // 5: jqueue.v1.NackJobRequest
@@ -529,18 +519,18 @@ var file_jqueue_v1_lease_service_proto_goTypes = []any{
 	(*timestamppb.Timestamp)(nil),  // 11: google.protobuf.Timestamp
 }
 var file_jqueue_v1_lease_service_proto_depIdxs = []int32{
-	9,  // 0: jqueue.v1.LeaseJobsRequest.lease_duration:type_name -> google.protobuf.Duration
-	9,  // 1: jqueue.v1.LeaseJobsRequest.wait_timeout:type_name -> google.protobuf.Duration
+	9,  // 0: jqueue.v1.LeaseJobRequest.lease_duration:type_name -> google.protobuf.Duration
+	9,  // 1: jqueue.v1.LeaseJobRequest.wait_timeout:type_name -> google.protobuf.Duration
 	10, // 2: jqueue.v1.LeasedJob.job:type_name -> jqueue.v1.Job
 	11, // 3: jqueue.v1.LeasedJob.lease_expires_at:type_name -> google.protobuf.Timestamp
-	1,  // 4: jqueue.v1.LeaseJobsResponse.leased_jobs:type_name -> jqueue.v1.LeasedJob
+	1,  // 4: jqueue.v1.LeaseJobResponse.leased_job:type_name -> jqueue.v1.LeasedJob
 	9,  // 5: jqueue.v1.ExtendJobLeaseRequest.duration:type_name -> google.protobuf.Duration
 	11, // 6: jqueue.v1.ExtendJobLeaseResponse.lease_expires_at:type_name -> google.protobuf.Timestamp
-	0,  // 7: jqueue.v1.LeaseService.LeaseJobs:input_type -> jqueue.v1.LeaseJobsRequest
+	0,  // 7: jqueue.v1.LeaseService.LeaseJob:input_type -> jqueue.v1.LeaseJobRequest
 	7,  // 8: jqueue.v1.LeaseService.ExtendJobLease:input_type -> jqueue.v1.ExtendJobLeaseRequest
 	3,  // 9: jqueue.v1.LeaseService.AckJob:input_type -> jqueue.v1.AckJobRequest
 	5,  // 10: jqueue.v1.LeaseService.NackJob:input_type -> jqueue.v1.NackJobRequest
-	2,  // 11: jqueue.v1.LeaseService.LeaseJobs:output_type -> jqueue.v1.LeaseJobsResponse
+	2,  // 11: jqueue.v1.LeaseService.LeaseJob:output_type -> jqueue.v1.LeaseJobResponse
 	8,  // 12: jqueue.v1.LeaseService.ExtendJobLease:output_type -> jqueue.v1.ExtendJobLeaseResponse
 	4,  // 13: jqueue.v1.LeaseService.AckJob:output_type -> jqueue.v1.AckJobResponse
 	6,  // 14: jqueue.v1.LeaseService.NackJob:output_type -> jqueue.v1.NackJobResponse

@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	LeaseService_LeaseJobs_FullMethodName      = "/jqueue.v1.LeaseService/LeaseJobs"
+	LeaseService_LeaseJob_FullMethodName       = "/jqueue.v1.LeaseService/LeaseJob"
 	LeaseService_ExtendJobLease_FullMethodName = "/jqueue.v1.LeaseService/ExtendJobLease"
 	LeaseService_AckJob_FullMethodName         = "/jqueue.v1.LeaseService/AckJob"
 	LeaseService_NackJob_FullMethodName        = "/jqueue.v1.LeaseService/NackJob"
@@ -29,7 +29,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type LeaseServiceClient interface {
-	LeaseJobs(ctx context.Context, in *LeaseJobsRequest, opts ...grpc.CallOption) (*LeaseJobsResponse, error)
+	LeaseJob(ctx context.Context, in *LeaseJobRequest, opts ...grpc.CallOption) (*LeaseJobResponse, error)
 	ExtendJobLease(ctx context.Context, in *ExtendJobLeaseRequest, opts ...grpc.CallOption) (*ExtendJobLeaseResponse, error)
 	AckJob(ctx context.Context, in *AckJobRequest, opts ...grpc.CallOption) (*AckJobResponse, error)
 	NackJob(ctx context.Context, in *NackJobRequest, opts ...grpc.CallOption) (*NackJobResponse, error)
@@ -43,10 +43,10 @@ func NewLeaseServiceClient(cc grpc.ClientConnInterface) LeaseServiceClient {
 	return &leaseServiceClient{cc}
 }
 
-func (c *leaseServiceClient) LeaseJobs(ctx context.Context, in *LeaseJobsRequest, opts ...grpc.CallOption) (*LeaseJobsResponse, error) {
+func (c *leaseServiceClient) LeaseJob(ctx context.Context, in *LeaseJobRequest, opts ...grpc.CallOption) (*LeaseJobResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(LeaseJobsResponse)
-	err := c.cc.Invoke(ctx, LeaseService_LeaseJobs_FullMethodName, in, out, cOpts...)
+	out := new(LeaseJobResponse)
+	err := c.cc.Invoke(ctx, LeaseService_LeaseJob_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +87,7 @@ func (c *leaseServiceClient) NackJob(ctx context.Context, in *NackJobRequest, op
 // All implementations must embed UnimplementedLeaseServiceServer
 // for forward compatibility.
 type LeaseServiceServer interface {
-	LeaseJobs(context.Context, *LeaseJobsRequest) (*LeaseJobsResponse, error)
+	LeaseJob(context.Context, *LeaseJobRequest) (*LeaseJobResponse, error)
 	ExtendJobLease(context.Context, *ExtendJobLeaseRequest) (*ExtendJobLeaseResponse, error)
 	AckJob(context.Context, *AckJobRequest) (*AckJobResponse, error)
 	NackJob(context.Context, *NackJobRequest) (*NackJobResponse, error)
@@ -101,8 +101,8 @@ type LeaseServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedLeaseServiceServer struct{}
 
-func (UnimplementedLeaseServiceServer) LeaseJobs(context.Context, *LeaseJobsRequest) (*LeaseJobsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method LeaseJobs not implemented")
+func (UnimplementedLeaseServiceServer) LeaseJob(context.Context, *LeaseJobRequest) (*LeaseJobResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method LeaseJob not implemented")
 }
 func (UnimplementedLeaseServiceServer) ExtendJobLease(context.Context, *ExtendJobLeaseRequest) (*ExtendJobLeaseResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ExtendJobLease not implemented")
@@ -134,20 +134,20 @@ func RegisterLeaseServiceServer(s grpc.ServiceRegistrar, srv LeaseServiceServer)
 	s.RegisterService(&LeaseService_ServiceDesc, srv)
 }
 
-func _LeaseService_LeaseJobs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LeaseJobsRequest)
+func _LeaseService_LeaseJob_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LeaseJobRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(LeaseServiceServer).LeaseJobs(ctx, in)
+		return srv.(LeaseServiceServer).LeaseJob(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: LeaseService_LeaseJobs_FullMethodName,
+		FullMethod: LeaseService_LeaseJob_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LeaseServiceServer).LeaseJobs(ctx, req.(*LeaseJobsRequest))
+		return srv.(LeaseServiceServer).LeaseJob(ctx, req.(*LeaseJobRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -214,8 +214,8 @@ var LeaseService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*LeaseServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "LeaseJobs",
-			Handler:    _LeaseService_LeaseJobs_Handler,
+			MethodName: "LeaseJob",
+			Handler:    _LeaseService_LeaseJob_Handler,
 		},
 		{
 			MethodName: "ExtendJobLease",

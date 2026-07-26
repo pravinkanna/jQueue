@@ -9,18 +9,17 @@ import "jqueue/v1/job.proto";
 
 
 service LeaseService {
-  rpc LeaseJobs(LeaseJobsRequest) returns (LeaseJobsResponse);
+  rpc LeaseJob(LeaseJobRequest) returns (LeaseJobResponse);
   rpc ExtendJobLease(ExtendJobLeaseRequest) returns (ExtendJobLeaseResponse);
   rpc AckJob(AckJobRequest) returns (AckJobResponse);
   rpc NackJob(NackJobRequest) returns (NackJobResponse);
 }
 
 
-message LeaseJobsRequest {
+message LeaseJobRequest {
   string queue = 1;
-  uint32 batch_size = 2;
-  google.protobuf.Duration lease_duration = 3;
-  google.protobuf.Duration wait_timeout = 4;  // long-poll: max time server holds the call
+  google.protobuf.Duration lease_duration = 2;
+  google.protobuf.Duration wait_timeout = 3;  // long-poll: max time server holds the call
 }
 
 message LeasedJob {
@@ -29,8 +28,8 @@ message LeasedJob {
   google.protobuf.Timestamp lease_expires_at = 3;
 }
 
-message LeaseJobsResponse {
-  repeated LeasedJob leased_jobs = 1;
+message LeaseJobResponse {
+  LeasedJob leased_job = 1;
 }
 
 message AckJobRequest {
