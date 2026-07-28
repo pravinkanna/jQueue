@@ -58,7 +58,6 @@ func (qs *queueServer) GetQueueStatus(ctx context.Context, req *pb.GetQueueStatu
 			ScheduledCount: queue.ScheduledCount,
 			LeasedCount:    queue.LeasedCount,
 			CompletedCount: queue.CompletedCount,
-			FailedCount:    queue.FailedCount,
 			DlqCount:       queue.DLQCount,
 		},
 	}
@@ -79,7 +78,6 @@ func (qs *queueServer) ListQueues(ctx context.Context, req *pb.ListQueuesRequest
 			ScheduledCount: item.ScheduledCount,
 			LeasedCount:    item.LeasedCount,
 			CompletedCount: item.CompletedCount,
-			FailedCount:    item.FailedCount,
 			DlqCount:       item.DLQCount,
 		}
 

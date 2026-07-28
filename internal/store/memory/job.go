@@ -17,6 +17,16 @@ func (m *Memory) EnqueueJob(ctx context.Context, enqueueParams store.EnqueuePara
 		return "", false, store.ErrQueueNotFound
 	}
 
+	// idempotency deduplication (if key given) - check a job there with the same idempotency key
+	// TODO: Implement it as hashmap for o(1) check
+	if enqueueParams.IdempotencyKey != "" {
+		for _, j := range m.jobs {
+			if enqueueParams.IdempotencyKey == j.IdempotencyKey && enqueueParams.Queue == j.Queue {
+				return j.JobID, true, nil
+			}
+		}
+	}
+
 	// Generate a new UUID v7
 	id, err := uuid.NewV7()
 	if err != nil {
@@ -31,13 +41,12 @@ func (m *Memory) EnqueueJob(ctx context.Context, enqueueParams store.EnqueuePara
 		Queue:          enqueueParams.Queue,
 		Payload:        enqueueParams.Payload,
 		MaxRetries:     enqueueParams.MaxRetries,
-		State:          store.JobStatePending,
+		State:          store.JobStateScheduled,
 		RetryCount:     0,
 		CreatedAt:      time.Now(),
 		ScheduledAt:    enqueueParams.RunAt,
 	}
-	m.queueWithJobIDs[qName].jobIDs = append(m.queueWithJobIDs[qName].jobIDs, jobID)
-	m.queueWithJobIDs[qName].queue.PendingCount++
+	m.queueWithJobIDs[qName].scheduledJobIDs = append(m.queueWithJobIDs[qName].scheduledJobIDs, jobID)
 
 	return jobID, isDuplicate, nil
 }
@@ -61,23 +70,25 @@ func (m *Memory) CancelJob(ctx context.Context, jobID string) (state store.JobSt
 
 	// If the job is already started or done return error
 	if job.State != store.JobStateScheduled && job.State != store.JobStatePending {
-		return store.JobStateUnspecified, store.ErrJobAlreadyStatedOrCompleted
+		return store.JobStateUnspecified, store.ErrJobAlreadyStartedOrCompleted
 	}
 
 	if job.State == store.JobStateScheduled {
-		m.queueWithJobIDs[job.Queue].queue.ScheduledCount--
+		// Remove the job from jobIDs
+		m.queueWithJobIDs[job.Queue].scheduledJobIDs = slices.DeleteFunc(
+			m.queueWithJobIDs[job.Queue].scheduledJobIDs, func(x string) bool {
+				return x == jobID
+			})
 	} else {
-		m.queueWithJobIDs[job.Queue].queue.PendingCount--
+		// Remove the job from jobIDs
+		m.queueWithJobIDs[job.Queue].pendingJobIDs = slices.DeleteFunc(
+			m.queueWithJobIDs[job.Queue].pendingJobIDs, func(x string) bool {
+				return x == jobID
+			})
 	}
 
 	// Set job state to cancelled
 	job.State = store.JobStateCancelled
-
-	// Remove the job from jobIDs
-	m.queueWithJobIDs[job.Queue].jobIDs = slices.DeleteFunc(
-		m.queueWithJobIDs[job.Queue].jobIDs, func(x string) bool {
-			return x == jobID
-		})
 
 	return job.State, nil
 }

@@ -11,7 +11,6 @@ type Queue struct {
 	ScheduledCount uint64
 	LeasedCount    uint64
 	CompletedCount uint64
-	FailedCount    uint64
 	DLQCount       uint64
 }
 
